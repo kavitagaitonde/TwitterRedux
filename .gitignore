@@ -1,0 +1,9 @@
+.DS_Store
+DerivedData/
+Pods/
+Pods/Pods.xcodeproj/xcuserdata
+Podfile.lock
+Pods/Pods.xcodeproj/xcuserdata/kavitagaitonde.xcuserdatad/
+TwitterRedux.xcodeproj/xcuserdata
+TwitterRedux.xcworkspace/xcuserdata
+TwitterRedux.xcodeproj/project.xcworkspace/xcuserdata
