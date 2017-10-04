@@ -12,10 +12,17 @@ class HamburgerViewController: UIViewController {
 
     @IBOutlet weak var menuView: UIView!
     @IBOutlet weak var contentView: UIView!
-    
     @IBOutlet weak var contentLeftMarginConstraint: NSLayoutConstraint!
     
+    var menuViewController: UIViewController! {
+        didSet {
+            view.layoutIfNeeded()
+            menuView.addSubview(menuViewController.view)
+        }
+    }
+    
     var originalLeftMargin: CGFloat!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -34,22 +41,29 @@ class HamburgerViewController: UIViewController {
         switch sender.state {
         case UIGestureRecognizerState.began:
             originalLeftMargin = contentLeftMarginConstraint.constant
+            print ("BEGAN  translation.x -- \(translation.x)")
+            print ("BEGAN  originalleftmargin -- \(originalLeftMargin)")
             break
         case UIGestureRecognizerState.changed:
             contentLeftMarginConstraint.constant = originalLeftMargin + translation.x
+            print ("CHANGED  translation.x -- \(translation.x)")
+            print ("CHANGED  contentLeftMarginConstraint.constant -- \(contentLeftMarginConstraint.constant)")
             break
         case UIGestureRecognizerState.ended:
             UIView.animate(withDuration: 0.5, animations: {
                 if velocity.x > 0 { //pan to right
                     self.contentLeftMarginConstraint.constant = self.view.frame.size.width - 50
+                    print ("ENDED to right translation.x -- \(translation.x)")
+                    print ("ENDED to right contentLeftMarginConstraint.constant -- \(self.contentLeftMarginConstraint.constant)")
                 } else { //go back
-                    self.contentLeftMarginConstraint.constant = self.originalLeftMargin
+                    self.contentLeftMarginConstraint.constant = 0
+                    print ("ENDED to left translation.x -- \(translation.x)")
+                    print ("ENDED to left contentLeftMarginConstraint.constant -- \(self.contentLeftMarginConstraint.constant)")
+
                 }
             })
-            
             break
         default: break
-
         }
     }
     

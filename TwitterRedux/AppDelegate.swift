@@ -17,13 +17,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let hamburgerVC = storyboard.instantiateViewController(withIdentifier: "HamburgerViewController") as! HamburgerViewController
+        
         if User.currentUser != nil {//logged in user
             print("User already exists! - \((User.currentUser?.name)!)")
-            let vc = storyboard.instantiateViewController(withIdentifier: "TweetsNavigationViewController")
-            window?.rootViewController = vc
+            window?.rootViewController = hamburgerVC
         } else { //not logged in
             print("User does not exist!")
         }
+        
+        let menuVC = storyboard.instantiateViewController(withIdentifier: "MenuViewController")
+        hamburgerVC.menuViewController = menuVC
         
         //setup notification observers
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UserLoggedOut"), object: nil, queue: OperationQueue.main, using: {(Notification) -> () in
@@ -54,6 +58,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        TwitterClient.sharedInstance?.handleOpenUrl(url: url)
+        return true
     }
 
 

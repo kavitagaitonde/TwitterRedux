@@ -28,7 +28,7 @@ class TwitterClient: BDBOAuth1SessionManager {
         deauthorize()
 
         
-        fetchRequestToken(withPath: "oauth/request_token", method: "GET", callbackURL: URL(string: "twittertwo://oauth"), scope: nil, success: { (requestToken: BDBOAuth1Credential?) in
+        fetchRequestToken(withPath: "oauth/request_token", method: "GET", callbackURL: URL(string: "twitterredux://oauth"), scope: nil, success: { (requestToken: BDBOAuth1Credential?) in
                 let token = (requestToken?.token)!
                 print("Got Oauth token =\(token)")
                 let url = URL(string: "\(twitterBaseUrl)/oauth/authorize?oauth_token=\(token)")

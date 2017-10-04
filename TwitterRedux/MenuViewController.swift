@@ -13,11 +13,15 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var tableView: UITableView!
     
     var viewControllers: [UIViewController] = [UIViewController]()
-    
+    var hamburgerViewController: HamburgerViewController! 
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -25,6 +29,29 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Dispose of any resources that can be recreated.
     }
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 3
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MenuTableViewCell", for: indexPath)
+        switch indexPath.row {
+        case 0:
+            cell.textLabel?.text = "0"
+            break
+        case 1:
+            cell.textLabel?.text = "1"
+            break
+        case 2:
+            cell.textLabel?.text = "2"
+            break
+        default:
+            break
+        }
+        return cell
+    }
+    
+
 
     /*
     // MARK: - Navigation
