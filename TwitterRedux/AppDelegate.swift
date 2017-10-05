@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "TweetsNavigationViewController") as! HamburgerViewController
+        let vc = storyboard.instantiateViewController(withIdentifier: "TweetsNavigationViewController")
         if User.currentUser != nil {//logged in user
             print("User already exists! - \((User.currentUser?.name)!)")
             window?.rootViewController = vc
@@ -25,9 +25,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("User does not exist!")
         }
         
-        let hamburgerVC = storyboard.instantiateViewController(withIdentifier: "HamburgerViewController") as! HamburgerViewController        
-        let menuVC = storyboard.instantiateViewController(withIdentifier: "MenuViewController")
-        hamburgerVC.menuViewController = menuVC
         
         //setup notification observers
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UserLoggedOut"), object: nil, queue: OperationQueue.main, using: {(Notification) -> () in

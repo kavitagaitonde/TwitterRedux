@@ -13,7 +13,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var tableView: UITableView!
     
     var viewControllers: [UIViewController] = [UIViewController]()
-    var menuOptions: [String] = ["Profile", "Timeline", "Mentions"]
+    var menuOptions: [String] = ["Profile", "Timeline"/*, "Mentions"*/]
     var hamburgerViewController: HamburgerViewController! 
 
     override func viewDidLoad() {
@@ -24,6 +24,9 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let profileVC = storyboard.instantiateViewController(withIdentifier: "ProfileNavigationViewController")
+        let timelineVC = storyboard.instantiateViewController(withIdentifier: "TimelineNavigationViewController")
+        viewControllers.append(profileVC)
+        viewControllers.append(timelineVC)
         
     }
 
@@ -33,12 +36,13 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return menuOptions.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MenuTableViewCell", for: indexPath)
-        switch indexPath.row {
+        cell.textLabel?.text = menuOptions[indexPath.row]
+        /*switch indexPath.row {
         case 0:
             cell.textLabel?.text = "0"
             break
@@ -50,11 +54,15 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             break
         default:
             break
-        }
+        }*/
         return cell
     }
     
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        self.hamburgerViewController.contentViewController = viewControllers[indexPath.row]
+    }
 
     /*
     // MARK: - Navigation

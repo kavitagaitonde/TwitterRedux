@@ -31,6 +31,7 @@
 
 /* Begin PBXFileReference section */
 		0180212A1F85B0D600DBA404 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		06C2E9DE1F868FA2003D0ADF /* TwitterRedux.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TwitterRedux.entitlements; sourceTree = "<group>"; };
 		06C7C5581F848AB3004398A3 /* TwitterRedux.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwitterRedux.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06C7C55B1F848AB3004398A3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		06C7C55D1F848AB3004398A3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -89,6 +90,7 @@
 		06C7C55A1F848AB3004398A3 /* TwitterRedux */ = {
 			isa = PBXGroup;
 			children = (
+				06C2E9DE1F868FA2003D0ADF /* TwitterRedux.entitlements */,
 				06C7C57D1F853A58004398A3 /* Controllers */,
 				06C7C57B1F849234004398A3 /* Models */,
 				06C7C5931F853B0A004398A3 /* Network */,
@@ -197,8 +199,13 @@
 				TargetAttributes = {
 					06C7C5571F848AB3004398A3 = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = 233VZYN7DT;
+						DevelopmentTeam = 532N9BEN6E;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -435,7 +442,7 @@
 			baseConfigurationReference = EF20D9E22E9654C0D5CF1F6C /* Pods-TwitterRedux.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 233VZYN7DT;
+				DEVELOPMENT_TEAM = 532N9BEN6E;
 				INFOPLIST_FILE = TwitterRedux/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kavitagaitonde.TwitterRedux;
@@ -449,7 +456,7 @@
 			baseConfigurationReference = 2C1D515D89EC5206812288CB /* Pods-TwitterRedux.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 233VZYN7DT;
+				DEVELOPMENT_TEAM = 532N9BEN6E;
 				INFOPLIST_FILE = TwitterRedux/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kavitagaitonde.TwitterRedux;

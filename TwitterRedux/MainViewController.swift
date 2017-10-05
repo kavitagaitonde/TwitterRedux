@@ -148,7 +148,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-            if(segue.identifier == "composeTweetSegue") {
+            /*if(segue.identifier == "composeTweetSegue") {
                 let composeController = segue.destination as! ComposeViewController
                 composeController.composeMode = .tweet
                 composeController.addTweet = { (tweet: Tweet) in
@@ -156,7 +156,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                     self.tweetRecentId = self.tweets[0].id
                     self.tableView.reloadData()
                 }
-            } else if(segue.identifier == "composeReplySegue") {
+            } else */if(segue.identifier == "composeReplySegue") {
                 let composeController = segue.destination as! ComposeViewController
                 composeController.composeMode = .reply
                 let button = sender as! UIButton
@@ -178,14 +178,14 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                     self.tableView.deselectRow(at: indexPath, animated: true)
                 }
-            } else if (segue.identifier == "meSegue") {
+            } /*else if (segue.identifier == "meSegue") {
                 //try to get the latest user object
                 TwitterClient.sharedInstance?.userCredentials(success: {(user: User) in
                     User.currentUser = user
                 }, failure: {(error: Error?) in
                     //do nothing, use the existing instance
                 })
-            }
+            }*/
     
     }
  
