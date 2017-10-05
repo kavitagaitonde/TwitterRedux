@@ -13,6 +13,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var tableView: UITableView!
     
     var viewControllers: [UIViewController] = [UIViewController]()
+    var menuOptions: [String] = ["Profile", "Timeline", "Mentions"]
     var hamburgerViewController: HamburgerViewController! 
 
     override func viewDidLoad() {
@@ -21,6 +22,8 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let profileVC = storyboard.instantiateViewController(withIdentifier: "ProfileNavigationViewController")
         
     }
 

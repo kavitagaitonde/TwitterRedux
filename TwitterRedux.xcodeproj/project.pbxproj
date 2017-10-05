@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0180212B1F85B0D600DBA404 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0180212A1F85B0D600DBA404 /* ProfileViewController.swift */; };
 		06C7C55C1F848AB3004398A3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C7C55B1F848AB3004398A3 /* AppDelegate.swift */; };
 		06C7C55E1F848AB3004398A3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C7C55D1F848AB3004398A3 /* ViewController.swift */; };
 		06C7C5611F848AB3004398A3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06C7C55F1F848AB3004398A3 /* Main.storyboard */; };
@@ -29,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0180212A1F85B0D600DBA404 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		06C7C5581F848AB3004398A3 /* TwitterRedux.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwitterRedux.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06C7C55B1F848AB3004398A3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		06C7C55D1F848AB3004398A3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				06C7C5871F853AEE004398A3 /* MeViewController.swift */,
 				06C7C5961F854433004398A3 /* HamburgerViewController.swift */,
 				06C7C5981F854452004398A3 /* MenuViewController.swift */,
+				0180212A1F85B0D600DBA404 /* ProfileViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -301,6 +304,7 @@
 				06C7C58A1F853AEE004398A3 /* LoginViewController.swift in Sources */,
 				06C7C5881F853AEE004398A3 /* ComposeViewController.swift in Sources */,
 				06C7C5811F853ADB004398A3 /* InfiniteScrollActivityView.swift in Sources */,
+				0180212B1F85B0D600DBA404 /* ProfileViewController.swift in Sources */,
 				06C7C55E1F848AB3004398A3 /* ViewController.swift in Sources */,
 				06C7C5971F854433004398A3 /* HamburgerViewController.swift in Sources */,
 				06C7C5951F853B34004398A3 /* TwitterClient.swift in Sources */,
