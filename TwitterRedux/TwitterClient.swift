@@ -13,6 +13,10 @@ let twitterBaseUrl = "https://api.twitter.com"
 let twitterConsumerKey = "SjiFlt58uAyjrXU8RGeRc6sK3"
 let twitterConsumerSecret = "H6jiqvTrW1pKT59SaggiFNLYwe6KxgeRTJdH3r2KFRM9asbKiD"
 
+enum TimelineType: Int {
+    case home = 0, user, mentions
+}
+
 class TwitterClient: BDBOAuth1SessionManager {
     
     
@@ -77,28 +81,52 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
 
-    func homeTimeLine (afterId: Int, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
-        homeTimeLine(parameters: ["since_id": afterId], success: success, failure: failure)
+    func getTimeLine (forType: TimelineType, afterId: Int, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+        getTimeLine(forType: forType, parameters: ["since_id": afterId], success: success, failure: failure)
     }
     
-    func homeTimeLine (beforeId: Int, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
-        homeTimeLine(parameters: ["max_id": beforeId+1], success: success, failure: failure)
+    func getTimeLine (forType: TimelineType, beforeId: Int, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+        getTimeLine(forType: forType, parameters: ["max_id": beforeId+1], success: success, failure: failure)
     }
     
-    func homeTimeLine (success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
-        homeTimeLine(parameters: nil, success: success, failure: failure)
+    func getTimeLine (forType: TimelineType, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+        getTimeLine(forType: forType, parameters: nil, success: success, failure: failure)
     }
     
-    func homeTimeLine (parameters: NSDictionary?, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
-        get("1.1/statuses/home_timeline.json", parameters: parameters, progress: nil
+    func getTimeLine (forType: TimelineType,  parameters: NSDictionary?, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+        
+        var url : String?
+        switch forType {
+        case .home:
+            url = "1.1/statuses/home_timeline.json"
+            break
+        case .user:
+            url = "1.1/statuses/user_timeline.json"
+            break
+        case .mentions:
+            url = "1.1/statuses/mentions_timeline.json"
+            break
+        }
+        get(url!, parameters: parameters, progress: nil
             , success: { (task: URLSessionDataTask?, response: Any?) in
-                print("Success fetching home timeline - ")
+                print("Success fetching \(self.getTimelineType(forType)) timeline - ")
                 let dictionaries = response as! [NSDictionary]
                 success(Tweet.tweetsArray(dictionaries: dictionaries))
-            }, failure: { (task: URLSessionDataTask?, error: Error) in
-                print("Error fetching home timeline - \(error.localizedDescription)")
-                failure(error)
+        }, failure: { (task: URLSessionDataTask?, error: Error) in
+            print("Error fetching \(self.getTimelineType(forType)) timeline - \(error.localizedDescription)")
+            failure(error)
         })
+    }
+
+    func getTimelineType (_ from: TimelineType) -> String {
+        switch from {
+        case .home:
+            return "home"
+        case .user:
+            return "user"
+        case .mentions:
+            return "mentions"
+        }
     }
     
     func favorite (tweetId: Int, success: @escaping (Tweet) -> (),  failure: @escaping (Error) -> ()) {

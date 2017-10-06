@@ -31,6 +31,10 @@ class TweetTableViewCell: UITableViewCell, TTTAttributedLabelDelegate{
         super.awakeFromNib()
         self.profileImageView.layer.cornerRadius = 5.0
         self.profileImageView.clipsToBounds = true
+        self.profileImageView.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapOnImage(_:)))
+        tapGesture.delegate = self
+        self.profileImageView.addGestureRecognizer(tapGesture)
         self.tweetTextLabel.enabledTextCheckingTypes =  NSTextCheckingAllTypes
         self.tweetTextLabel.delegate = self
     }
@@ -115,6 +119,16 @@ class TweetTableViewCell: UITableViewCell, TTTAttributedLabelDelegate{
             })
         }
         
+    }
+    
+    func tapOnImage(_ sender: UITapGestureRecognizer) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        let profileNC = storyboard.instantiateViewController(withIdentifier: "ProfileNavigationViewController") as! UINavigationController
+        let profileVC = profileNC.viewControllers.first as! ProfileViewController
+        profileVC.user = self.tweet?.user
+        UIApplication.shared.delegate?.window??.rootViewController = profileNC
+        window?.rootViewController = profileNC
     }
     
     // MARK: - TTTAttributedLabel

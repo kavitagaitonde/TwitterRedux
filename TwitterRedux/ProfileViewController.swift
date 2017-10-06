@@ -20,11 +20,11 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var favoritesCountLabel: UILabel!
     @IBOutlet weak var descLabel: UILabel!
     
+    var user: User!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let user = User.currentUser
         self.nameLabel.text = user?.name
         self.screenLabel.text = "@\((user?.screenName)!)"
         self.descLabel.text = "\((user?.desc)!)"

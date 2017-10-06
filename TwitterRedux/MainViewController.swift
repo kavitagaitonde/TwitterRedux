@@ -17,9 +17,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     var infiniteScrollActivityView:InfiniteScrollActivityView?
     var isMoreDataLoading = false
     var tweets: [Tweet] = [Tweet]()
-    var tweetRecentId = 0
-    var tweetOldestId = 0
-    //var tweetOffset = 0
+    var timelineType: TimelineType = TimelineType.home
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,21 +66,11 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         let success = {(tweets: [Tweet]) in
             print ("Tweets fetch successful")
             if(recent) {//fetch latest tweets
-                /*if(self.tweetRecentId > 0) {
-                    self.tweets = tweets + self.tweets
-                } else {*/
-                    self.tweets = tweets
-                //}
+                self.tweets = tweets
             } else {
                 self.tweets += tweets
             }
-            if(self.tweets.count > 0) {
-                self.tweetRecentId = self.tweets[0].id
-                self.tweetOldestId = self.tweets[self.tweets.count-1].id
-            } else {
-                self.tweetRecentId = 0
-                self.tweetOldestId = 0
-            }
+            
             self.tableView.reloadData()
             self.isMoreDataLoading = false
         }
@@ -92,14 +80,10 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.isMoreDataLoading = false
         }
         
-        if(recent) {//fetch latest tweets
-            /*if(self.tweetRecentId > 0) {
-                TwitterClient.sharedInstance?.homeTimeLine(afterId: self.tweetRecentId, success: success, failure: failure)
-            } else {*/
-                TwitterClient.sharedInstance?.homeTimeLine(success: success, failure: failure)
-            //}
+        if(recent) {//fetch latest tweets, this will overwrite the existing tweets array
+            TwitterClient.sharedInstance?.getTimeLine(forType: timelineType, success: success, failure: failure)
         } else { //older tweets
-            TwitterClient.sharedInstance?.homeTimeLine(beforeId: self.tweetOldestId, success: success, failure: failure)
+            TwitterClient.sharedInstance?.getTimeLine(forType: timelineType, beforeId: (self.tweets.count > 0) ? self.tweets[self.tweets.count-1].id:0, success: success, failure: failure)
         }
     }
     
@@ -119,6 +103,20 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         return cell
     }
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let detailsController = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+        let tweet = self.tweets[indexPath.row] as Tweet
+        detailsController.tweet = tweet
+        detailsController.updateTweet = { (updatedTweet: Tweet) in
+            self.tweets[indexPath.row] = updatedTweet
+            self.tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
+        self.navigationController?.pushViewController(detailsController, animated: true)
+        
+    }
+
     // MARK: - Scrollview
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -131,7 +129,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             // When the user has scrolled past the threshold, start requesting
             if(scrollView.contentOffset.y > scrollOffsetThreshold && self.tableView.isDragging) {
                 self.isMoreDataLoading = true
-                print("Loading more data from oldest offset = \(self.tweetOldestId)")
+                print("Loading more data from oldest offset = \((self.tweets.count > 0) ? self.tweets[self.tweets.count-1].id:0)")
                 
                 // Update position of loadingMoreView, and start loading indicator
                 let frame = CGRect(x: 0, y: tableView.contentSize.height, width: tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
@@ -153,7 +151,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                 composeController.composeMode = .tweet
                 composeController.addTweet = { (tweet: Tweet) in
                     self.tweets.insert(tweet, at: 0)
-                    self.tweetRecentId = self.tweets[0].id
                     self.tableView.reloadData()
                 }
             } else */if(segue.identifier == "composeReplySegue") {
@@ -163,7 +160,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                 composeController.replyToTweet = self.tweets[button.tag]
                 composeController.addTweet = { (tweet: Tweet) in
                     self.tweets.insert(tweet, at: 0)
-                    self.tweetRecentId = self.tweets[0].id
                     self.tableView.reloadData()
                 }
             } else if (segue.identifier == "tweetDetailSegue") {

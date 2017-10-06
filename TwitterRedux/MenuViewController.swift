@@ -13,7 +13,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var tableView: UITableView!
     
     var viewControllers: [UIViewController] = [UIViewController]()
-    var menuOptions: [String] = ["Profile", "Timeline"/*, "Mentions"*/]
+    var menuOptions: [String] = ["Profile", "Timeline", "Mentions"]
     var hamburgerViewController: HamburgerViewController! 
 
     override func viewDidLoad() {
@@ -23,11 +23,27 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView.dataSource = self
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let profileVC = storyboard.instantiateViewController(withIdentifier: "ProfileNavigationViewController")
-        let timelineVC = storyboard.instantiateViewController(withIdentifier: "TimelineNavigationViewController")
-        viewControllers.append(profileVC)
-        viewControllers.append(timelineVC)
         
+        let profileNC = storyboard.instantiateViewController(withIdentifier: "ProfileNavigationViewController") as! UINavigationController
+        let profileVC = profileNC.viewControllers.first as! ProfileViewController
+        profileVC.user = User.currentUser
+        
+        
+        let timelineNC = storyboard.instantiateViewController(withIdentifier: "TimelineNavigationViewController") as! UINavigationController
+        let timelineVC = timelineNC.viewControllers.first as! MainViewController
+        timelineVC.timelineType = .home
+       
+        
+        let mentionsNC = storyboard.instantiateViewController(withIdentifier: "TimelineNavigationViewController") as! UINavigationController
+        let mentionsVC = mentionsNC.viewControllers.first as! MainViewController
+        mentionsVC.timelineType = .mentions
+        
+        viewControllers.append(profileNC)
+        viewControllers.append(timelineNC)
+        viewControllers.append(mentionsNC)
+        
+        self.hamburgerViewController.contentViewController = timelineNC
+        self.hamburgerViewController.navigationItem.title = menuOptions[1]        
     }
 
     override func didReceiveMemoryWarning() {
@@ -42,19 +58,6 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MenuTableViewCell", for: indexPath)
         cell.textLabel?.text = menuOptions[indexPath.row]
-        /*switch indexPath.row {
-        case 0:
-            cell.textLabel?.text = "0"
-            break
-        case 1:
-            cell.textLabel?.text = "1"
-            break
-        case 2:
-            cell.textLabel?.text = "2"
-            break
-        default:
-            break
-        }*/
         return cell
     }
     
@@ -62,6 +65,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         self.hamburgerViewController.contentViewController = viewControllers[indexPath.row]
+        self.hamburgerViewController.navigationItem.title = menuOptions[indexPath.row]
     }
 
     /*
