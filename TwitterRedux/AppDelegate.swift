@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "TweetsNavigationViewController")
+        let vc = storyboard.instantiateViewController(withIdentifier: "HamburgerViewController")
         if User.currentUser != nil {//logged in user
             print("User already exists! - \((User.currentUser?.name)!)")
             window?.rootViewController = vc

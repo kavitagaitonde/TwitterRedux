@@ -31,6 +31,7 @@ class DetailViewController: UIViewController, TTTAttributedLabelDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print(self.navigationController?.viewControllers)
         let user = tweet?.user
         self.nameLabel.text = user?.name
         self.screenLabel.text = "@\((user?.screenName)!)"

@@ -15,24 +15,25 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     var viewControllers: [UIViewController] = [UIViewController]()
     var menuOptions: [String] = ["Profile", "Timeline", "Mentions"]
     var hamburgerViewController: HamburgerViewController! 
-
+    var rowHeight: Int = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        self.tableView.isScrollEnabled = false
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
         let profileNC = storyboard.instantiateViewController(withIdentifier: "ProfileNavigationViewController") as! UINavigationController
-        let profileVC = profileNC.viewControllers.first as! ProfileViewController
+        let profileVC =  profileNC.viewControllers.first as! ProfileViewController
         profileVC.user = User.currentUser
         
         
         let timelineNC = storyboard.instantiateViewController(withIdentifier: "TimelineNavigationViewController") as! UINavigationController
-        let timelineVC = timelineNC.viewControllers.first as! MainViewController
+        let timelineVC = /*timelineNC.topViewController as! MainViewController*/ timelineNC.viewControllers.first as! MainViewController
         timelineVC.timelineType = .home
-       
         
         let mentionsNC = storyboard.instantiateViewController(withIdentifier: "TimelineNavigationViewController") as! UINavigationController
         let mentionsVC = mentionsNC.viewControllers.first as! MainViewController
@@ -42,6 +43,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         viewControllers.append(timelineNC)
         viewControllers.append(mentionsNC)
         
+        rowHeight = Int(self.tableView.frame.size.height) / menuOptions.count
         self.hamburgerViewController.contentViewController = timelineNC
         self.hamburgerViewController.navigationItem.title = menuOptions[1]        
     }
@@ -55,9 +57,14 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         return menuOptions.count
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return CGFloat(self.rowHeight)
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MenuTableViewCell", for: indexPath)
         cell.textLabel?.text = menuOptions[indexPath.row]
+        cell.textLabel?.textColor = .white
         return cell
     }
     

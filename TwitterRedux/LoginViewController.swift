@@ -35,7 +35,10 @@ class LoginViewController: UIViewController {
     @IBAction func loginButtonClicked(_ sender: AnyObject) {
         TwitterClient.sharedInstance?.login(success: { 
                 print ("Login successful")
-                self.performSegue(withIdentifier: "loginSegue", sender: nil)
+                //self.performSegue(withIdentifier: "loginSegue", sender: nil)
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let vc = storyboard.instantiateViewController(withIdentifier: "HamburgerViewController")
+                UIApplication.shared.delegate?.window??.rootViewController = vc
             }, failure: { (error: Error?) in
                 print("Error in login")
         })

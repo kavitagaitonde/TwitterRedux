@@ -14,6 +14,7 @@ class User: NSObject {
     var screenName: String?
     var desc: String?
     var profileUrl: URL?
+    var bannerUrl: URL?
     var createdAt: String?
     var followersCount: Int?
     var followingCount: Int?
@@ -38,6 +39,12 @@ class User: NSObject {
             profileUrl = URL(string: profileUrlString)
         } else {
             profileUrl = nil
+        }
+        let bannerUrlString = dictionary["profile_banner_url"] as? String
+        if let bannerUrlString = bannerUrlString {
+            bannerUrl = URL(string: bannerUrlString)
+        } else {
+            bannerUrl = nil
         }
         let timeString = dictionary["created_at"] as? String
         if let timeString = timeString {

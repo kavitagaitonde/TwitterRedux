@@ -81,19 +81,19 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
 
-    func getTimeLine (forType: TimelineType, afterId: Int, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
-        getTimeLine(forType: forType, parameters: ["since_id": afterId], success: success, failure: failure)
+    func getTimeLine (forUser: User, forType: TimelineType, afterId: Int, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+        getTimeLine(forUser: forUser, forType: forType, parameters: ["since_id": afterId], success: success, failure: failure)
     }
     
-    func getTimeLine (forType: TimelineType, beforeId: Int, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
-        getTimeLine(forType: forType, parameters: ["max_id": beforeId+1], success: success, failure: failure)
+    func getTimeLine (forUser: User?, forType: TimelineType, beforeId: Int, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+        getTimeLine(forUser: forUser, forType: forType, parameters: ["max_id": beforeId+1], success: success, failure: failure)
     }
     
-    func getTimeLine (forType: TimelineType, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
-        getTimeLine(forType: forType, parameters: nil, success: success, failure: failure)
+    func getTimeLine (forUser: User?, forType: TimelineType, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+        getTimeLine(forUser: forUser, forType: forType, parameters: nil, success: success, failure: failure)
     }
     
-    func getTimeLine (forType: TimelineType,  parameters: NSDictionary?, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+    func getTimeLine (forUser: User?, forType: TimelineType,  parameters: NSDictionary?, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
         
         var url : String?
         switch forType {
@@ -102,6 +102,11 @@ class TwitterClient: BDBOAuth1SessionManager {
             break
         case .user:
             url = "1.1/statuses/user_timeline.json"
+            if let user = forUser {
+                if parameters != nil {
+                    parameters?.setValue(user.id, forKey: "user_id")
+                }
+            }
             break
         case .mentions:
             url = "1.1/statuses/mentions_timeline.json"

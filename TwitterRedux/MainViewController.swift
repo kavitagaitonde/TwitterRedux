@@ -18,16 +18,23 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     var isMoreDataLoading = false
     var tweets: [Tweet] = [Tweet]()
     var timelineType: TimelineType = TimelineType.home
+    var user: User!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print ("******* Loading MainViewController *******")
-
+        if user == nil {
+            user = User.currentUser
+        }
+        
+        print(self.navigationController?.viewControllers)
+        
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.estimatedRowHeight = 125
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.scrollsToTop = true
+        self.setupTableViewHeader()
         
         // Add UI refreshing on pull down
         self.refreshControl = UIRefreshControl()
@@ -57,6 +64,36 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.loadData(true)
     }
     
+    func setupTableViewHeader() {
+        if timelineType == .user {
+            self.tableView.estimatedSectionHeaderHeight = 80
+            
+            let tableHeaderView = ProfileHeaderView(frame: CGRect(x: self.tableView.frame.origin.x, y: self.tableView.frame.origin.y, width: self.tableView.frame.size.width, height: 307))
+            tableHeaderView.nameLabel.text = user?.name
+            tableHeaderView.screennameLabel.text = "@\((user?.screenName)!)"
+            tableHeaderView.descriptionLabel.text = "\((user?.desc)!)"
+            //tableHeaderView.createdDateLabel.text = "Joined on \((user?.createdAt)!)"
+            tableHeaderView.followersCountLabel.text = "\((user?.followersCount)!)"
+            tableHeaderView.followingCountLabel.text = "\((user?.followingCount)!)"
+            //tableHeaderView.favoritesCountLabel.text = "\((user?.favoritesCount)!)"
+            tableHeaderView.tweetsCountLabel.text = "\((user?.tweetsCount)!)"
+            if (user?.profileUrl != nil) {
+                tableHeaderView.profileImageView.setImageWith((user?.profileUrl!)!)
+            } else {
+                tableHeaderView.profileImageView.image = nil
+            }
+            if (user?.bannerUrl != nil) {
+                tableHeaderView.bannerImageView.setImageWith((user?.bannerUrl!)!)
+            } else {
+                tableHeaderView.bannerImageView.image = nil
+            }
+            self.tableView.tableHeaderView = tableHeaderView
+        } else {
+            self.tableView.estimatedSectionHeaderHeight = 0
+            self.tableView.tableHeaderView = nil
+        }
+    }
+    
     func loadData(_ recent: Bool) {
         MBProgressHUD.hide(for: self.view, animated: true)
         self.infiniteScrollActivityView!.stopAnimating()
@@ -81,9 +118,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         
         if(recent) {//fetch latest tweets, this will overwrite the existing tweets array
-            TwitterClient.sharedInstance?.getTimeLine(forType: timelineType, success: success, failure: failure)
+            TwitterClient.sharedInstance?.getTimeLine(forUser: user, forType: timelineType, success: success, failure: failure)
         } else { //older tweets
-            TwitterClient.sharedInstance?.getTimeLine(forType: timelineType, beforeId: (self.tweets.count > 0) ? self.tweets[self.tweets.count-1].id:0, success: success, failure: failure)
+            TwitterClient.sharedInstance?.getTimeLine(forUser: user, forType: timelineType, beforeId: (self.tweets.count > 0) ? self.tweets[self.tweets.count-1].id:0, success: success, failure: failure)
         }
     }
     
@@ -96,6 +133,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.dequeueReusableCell(withIdentifier: "TweetTableViewCell", for: indexPath) as! TweetTableViewCell
         let tweet = self.tweets[indexPath.row] as Tweet
         cell.prepareCellFor(tweet: tweet, indexPath: indexPath)
+        cell.viewController = self
         cell.updateTweet = { (updatedTweet: Tweet) in
             self.tweets[indexPath.row] = updatedTweet
             tableView.reloadRows(at: [indexPath], with: .automatic)
@@ -103,19 +141,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         return cell
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let detailsController = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-        let tweet = self.tweets[indexPath.row] as Tweet
-        detailsController.tweet = tweet
-        detailsController.updateTweet = { (updatedTweet: Tweet) in
-            self.tweets[indexPath.row] = updatedTweet
-            self.tableView.reloadRows(at: [indexPath], with: .automatic)
-        }
-        self.navigationController?.pushViewController(detailsController, animated: true)
-        
-    }
 
     // MARK: - Scrollview
     
@@ -146,14 +171,14 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-            /*if(segue.identifier == "composeTweetSegue") {
+            if(segue.identifier == "composeTweetSegue") {
                 let composeController = segue.destination as! ComposeViewController
                 composeController.composeMode = .tweet
                 composeController.addTweet = { (tweet: Tweet) in
                     self.tweets.insert(tweet, at: 0)
                     self.tableView.reloadData()
                 }
-            } else */if(segue.identifier == "composeReplySegue") {
+            } else if(segue.identifier == "composeReplySegue") {
                 let composeController = segue.destination as! ComposeViewController
                 composeController.composeMode = .reply
                 let button = sender as! UIButton
@@ -174,14 +199,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                     self.tableView.deselectRow(at: indexPath, animated: true)
                 }
-            } /*else if (segue.identifier == "meSegue") {
-                //try to get the latest user object
-                TwitterClient.sharedInstance?.userCredentials(success: {(user: User) in
-                    User.currentUser = user
-                }, failure: {(error: Error?) in
-                    //do nothing, use the existing instance
-                })
-            }*/
+            }
     
     }
  

@@ -26,6 +26,7 @@ class TweetTableViewCell: UITableViewCell, TTTAttributedLabelDelegate{
     @IBOutlet weak var favoriteCountLabel: UILabel!
     var updateTweet : (Tweet) -> Void = { (tweet: Tweet) in }
     var tweet: Tweet?
+    var viewController: UIViewController!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -124,11 +125,10 @@ class TweetTableViewCell: UITableViewCell, TTTAttributedLabelDelegate{
     func tapOnImage(_ sender: UITapGestureRecognizer) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
-        let profileNC = storyboard.instantiateViewController(withIdentifier: "ProfileNavigationViewController") as! UINavigationController
-        let profileVC = profileNC.viewControllers.first as! ProfileViewController
+        let profileVC = storyboard.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
         profileVC.user = self.tweet?.user
-        UIApplication.shared.delegate?.window??.rootViewController = profileNC
-        window?.rootViewController = profileNC
+        self.viewController.navigationController?.pushViewController(profileVC, animated: true)
+        
     }
     
     // MARK: - TTTAttributedLabel
