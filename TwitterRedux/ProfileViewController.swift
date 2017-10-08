@@ -18,6 +18,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     var isMoreDataLoading = false
     var tweets: [Tweet] = [Tweet]()
     var user: User!
+    var origBannerImageHeightConstraintValue: CGFloat = 0.0
+    var shouldUpdateConstraints: Bool = false
+    var prevScrollOffset: CGFloat = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,16 +28,15 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.tableView.dataSource = self
         self.tableView.estimatedRowHeight = 125
         self.tableView.rowHeight = UITableViewAutomaticDimension
-        self.tableView.estimatedSectionHeaderHeight = 80
         
-        let tableHeaderView = ProfileHeaderView(frame: CGRect(x: self.tableView.frame.origin.x, y: self.tableView.frame.origin.y, width: self.tableView.frame.size.width, height: 307))
+        let tableHeaderView = ProfileHeaderView(/*frame: CGRect(x: self.tableView.frame.origin.x, y: self.tableView.frame.origin.y, width: self.tableView.frame.size.width, height: 300)*/)
         tableHeaderView.nameLabel.text = user?.name
         tableHeaderView.screennameLabel.text = "@\((user?.screenName)!)"
         tableHeaderView.descriptionLabel.text = "\((user?.desc)!)"
         //tableHeaderView.createdDateLabel.text = "Joined on \((user?.createdAt)!)"
         tableHeaderView.followersCountLabel.text = "\((user?.followersCount)!)"
         tableHeaderView.followingCountLabel.text = "\((user?.followingCount)!)"
-        //tableHeaderView.favoritesCountLabel.text = "\((user?.favoritesCount)!)"
+        tableHeaderView.likesCountLabel.text = "\((user?.favoritesCount)!)"
         tableHeaderView.tweetsCountLabel.text = "\((user?.tweetsCount)!)"
         if (user?.profileUrl != nil) {
             tableHeaderView.profileImageView.setImageWith((user?.profileUrl!)!)
@@ -46,6 +48,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         } else {
             tableHeaderView.bannerImageView.image = nil
         }
+        self.origBannerImageHeightConstraintValue = tableHeaderView.bannerImageHeightConstraint.constant
+        
+        print ("CONSTRAINT = \(self.origBannerImageHeightConstraintValue)")
         self.tableView.tableHeaderView = tableHeaderView
         
         // Add UI refreshing on pull down
@@ -68,9 +73,28 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
 
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.shouldUpdateConstraints = true
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let headerView = self.tableView.tableHeaderView
+        let size = headerView?.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+        print ("HEADERHEIGHT = \(headerView?.frame.size.height)")
+        print ("PROPOSED HEADERHEIGHT = \((size?.height)!)")
+        
+        if headerView?.frame.size.height != size?.height {
+            headerView?.frame.size.height = (size?.height)!
+            tableView.tableHeaderView = headerView
+            tableView.layoutIfNeeded()
+        }
     }
     
     func refreshControlAction(_ refreshControl: UIRefreshControl) {
@@ -108,6 +132,16 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.size.width, height: 1))
+        view.backgroundColor = .lightGray
+        return view
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 1.0
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print("****** Total rows = \(self.tweets.count)")
         return self.tweets.count
@@ -126,8 +160,63 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         return cell
     }
     
+    // MARK: - Scrollview
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (!self.isMoreDataLoading) {
+            let diff = scrollView.contentOffset.y - prevScrollOffset
+            
+            //print ("SCROLL OFSET Y = \(scrollView.contentOffset.y)")
+            //print (self.navigationController?.navigationBar.frame.size.height)
+            // Calculate the position of one screen length before the bottom of the results
+            let scrollViewContentHeight = tableView.contentSize.height
+            //actual hieght of the table filled in with content - height of 1 page of content
+            let scrollOffsetThreshold = scrollViewContentHeight - tableView.bounds.size.height
+            
+            // When the user has scrolled past the threshold, start requesting
+            if(scrollView.contentOffset.y > scrollOffsetThreshold && self.tableView.isDragging) {
+                self.isMoreDataLoading = true
+                print("Loading more data from oldest offset = \((self.tweets.count > 0) ? self.tweets[self.tweets.count-1].id:0)")
+                
+                // Update position of loadingMoreView, and start loading indicator
+                let frame = CGRect(x: 0, y: tableView.contentSize.height, width: tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
+                infiniteScrollActivityView?.frame = frame
+                infiniteScrollActivityView!.startAnimating()
+                
+                self.loadData(false)
+            } else if self.shouldUpdateConstraints == true && scrollView.contentOffset.y < 0 && diff < 0 {//blur header image
+                print("****** CHANGING CONSTRAINT BY = \(diff)")
+                let headerView = self.tableView.tableHeaderView as! ProfileHeaderView
+                headerView.bannerImageHeightConstraint.constant += abs(diff)
+                self.view.setNeedsLayout()
+                self.view.layoutIfNeeded()
+                //self.view.layoutIfNeeded()
+            }
+        
+        }
+        prevScrollOffset = scrollView.contentOffset.y
+    }
 
+    func resetTableviewHeader () {
+        print ("RESET Header height")
+        let headerView = self.tableView.tableHeaderView as! ProfileHeaderView
+        if headerView.bannerImageHeightConstraint.constant != self.origBannerImageHeightConstraintValue {
+            headerView.bannerImageHeightConstraint.constant = self.origBannerImageHeightConstraintValue
+            
+            UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
+                self.view.setNeedsLayout()
+                self.view.layoutIfNeeded()
+                }, completion: nil)
+        }
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        resetTableviewHeader()
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        resetTableviewHeader()
+    }
     
     // MARK: - Navigation
      

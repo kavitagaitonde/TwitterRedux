@@ -22,8 +22,9 @@ class ProfileHeaderView: UIView, TTTAttributedLabelDelegate {
     @IBOutlet weak var tweetsCountLabel: UILabel!
     @IBOutlet weak var followersCountLabel: UILabel!
     
-    @IBOutlet weak var pageView: UIView!
+    @IBOutlet weak var likesCountLabel: UILabel!
     @IBOutlet weak var pageControl: UIPageControl!
+    @IBOutlet weak var bannerImageHeightConstraint: NSLayoutConstraint!
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()

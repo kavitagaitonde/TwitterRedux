@@ -34,7 +34,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView.estimatedRowHeight = 125
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.scrollsToTop = true
-        self.setupTableViewHeader()
         
         // Add UI refreshing on pull down
         self.refreshControl = UIRefreshControl()
@@ -62,36 +61,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func refreshControlAction(_ refreshControl: UIRefreshControl) {
         self.loadData(true)
-    }
-    
-    func setupTableViewHeader() {
-        if timelineType == .user {
-            self.tableView.estimatedSectionHeaderHeight = 80
-            
-            let tableHeaderView = ProfileHeaderView(frame: CGRect(x: self.tableView.frame.origin.x, y: self.tableView.frame.origin.y, width: self.tableView.frame.size.width, height: 307))
-            tableHeaderView.nameLabel.text = user?.name
-            tableHeaderView.screennameLabel.text = "@\((user?.screenName)!)"
-            tableHeaderView.descriptionLabel.text = "\((user?.desc)!)"
-            //tableHeaderView.createdDateLabel.text = "Joined on \((user?.createdAt)!)"
-            tableHeaderView.followersCountLabel.text = "\((user?.followersCount)!)"
-            tableHeaderView.followingCountLabel.text = "\((user?.followingCount)!)"
-            //tableHeaderView.favoritesCountLabel.text = "\((user?.favoritesCount)!)"
-            tableHeaderView.tweetsCountLabel.text = "\((user?.tweetsCount)!)"
-            if (user?.profileUrl != nil) {
-                tableHeaderView.profileImageView.setImageWith((user?.profileUrl!)!)
-            } else {
-                tableHeaderView.profileImageView.image = nil
-            }
-            if (user?.bannerUrl != nil) {
-                tableHeaderView.bannerImageView.setImageWith((user?.bannerUrl!)!)
-            } else {
-                tableHeaderView.bannerImageView.image = nil
-            }
-            self.tableView.tableHeaderView = tableHeaderView
-        } else {
-            self.tableView.estimatedSectionHeaderHeight = 0
-            self.tableView.tableHeaderView = nil
-        }
     }
     
     func loadData(_ recent: Bool) {
