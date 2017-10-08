@@ -159,9 +159,18 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.tweets[indexPath.row] = updatedTweet
             tableView.reloadRows(at: [indexPath], with: .automatic)
         }
+        cell.replyTweet = { () in
+            self.performSegue(withIdentifier: "replySegue", sender: tweet)
+        }
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let cell = tableView.cellForRow(at: indexPath) as? TweetTableViewCell {
+            performSegue(withIdentifier: "profileTweetDetailSegue", sender: cell)
+        }
+    }
+
     // MARK: - Scrollview
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -229,7 +238,32 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             composeController.composeMode = .tweet
             composeController.addTweet = { (tweet: Tweet) in
             }
+        } else if(segue.identifier == "replySegue") {
+            let composeController = segue.destination as! ComposeViewController
+            composeController.composeMode = .reply
+            let tweet = sender as! Tweet
+            composeController.replyToTweet = tweet
+            composeController.addTweet = { (tweet: Tweet) in
+                self.tweets.insert(tweet, at: 0)
+                self.tableView.reloadData()
+            }
+        } else if (segue.identifier == "profileTweetDetailSegue") {
+            let cell = sender as! TweetTableViewCell
+            if let indexPath = self.tableView.indexPath(for: cell) {
+                let detailsController = segue.destination as! DetailViewController
+                let tweet = self.tweets[indexPath.row] as Tweet
+                detailsController.tweet = tweet
+                detailsController.updateTweet = { (updatedTweet: Tweet) in
+                    self.tweets[indexPath.row] = updatedTweet
+                    self.tableView.reloadRows(at: [indexPath], with: .automatic)
+                }
+                self.tableView.deselectRow(at: indexPath, animated: true)
+            }
         }
     }
  
+    @IBAction func onLogout(_ sender: AnyObject) {
+        TwitterClient.sharedInstance?.logout()
+    }
+
 }

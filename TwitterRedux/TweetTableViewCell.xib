@@ -96,6 +96,9 @@
                             <constraint firstAttribute="width" constant="15" id="hib-Pn-iX5"/>
                         </constraints>
                         <state key="normal" image="reply"/>
+                        <connections>
+                            <action selector="replyClicked:" destination="hTg-5b-h6N" eventType="touchUpInside" id="6dG-ii-KuX"/>
+                        </connections>
                     </button>
                 </subviews>
                 <constraints>

@@ -35,6 +35,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.scrollsToTop = true
         
+        //setup cell nib
+        self.tableView.register(UINib(nibName: "TweetTableViewCell", bundle: nil), forCellReuseIdentifier: "TweetTableViewCell")
+        
         // Add UI refreshing on pull down
         self.refreshControl = UIRefreshControl()
         self.refreshControl!.addTarget(self, action: #selector(refreshControlAction(_:)), for: UIControlEvents.valueChanged)
@@ -107,9 +110,19 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.tweets[indexPath.row] = updatedTweet
             tableView.reloadRows(at: [indexPath], with: .automatic)
         }
+        cell.replyTweet = { () in
+            self.performSegue(withIdentifier: "replySegue", sender: tweet)
+        }
         return cell
     }
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let cell = tableView.cellForRow(at: indexPath) as? TweetTableViewCell {
+            performSegue(withIdentifier: "tweetDetailSegue", sender: cell)
+        }
+    }
+
+    
 
     // MARK: - Scrollview
     
@@ -147,11 +160,11 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                     self.tweets.insert(tweet, at: 0)
                     self.tableView.reloadData()
                 }
-            } else if(segue.identifier == "composeReplySegue") {
+            } else if(segue.identifier == "replySegue") {
                 let composeController = segue.destination as! ComposeViewController
                 composeController.composeMode = .reply
-                let button = sender as! UIButton
-                composeController.replyToTweet = self.tweets[button.tag]
+                let tweet = sender as! Tweet
+                composeController.replyToTweet = tweet
                 composeController.addTweet = { (tweet: Tweet) in
                     self.tweets.insert(tweet, at: 0)
                     self.tableView.reloadData()

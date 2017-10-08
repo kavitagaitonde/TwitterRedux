@@ -21,6 +21,7 @@ class TweetTableViewCell: UITableViewCell, TTTAttributedLabelDelegate{
     @IBOutlet weak var retweetLabel: UILabel!
     @IBOutlet weak var retweetButton: UIButton!
     @IBOutlet weak var replyButton: UIButton!
+    var replyTweet : () -> Void = { () in }    
     @IBOutlet weak var retweetCountLabel: UILabel!
     @IBOutlet weak var favoriteButton: UIButton!    
     @IBOutlet weak var favoriteCountLabel: UILabel!
@@ -120,6 +121,10 @@ class TweetTableViewCell: UITableViewCell, TTTAttributedLabelDelegate{
             })
         }
         
+    }
+    
+    @IBAction func replyClicked(_ sender: AnyObject) {
+        self.replyTweet()
     }
     
     func tapOnImage(_ sender: UITapGestureRecognizer) {
