@@ -167,7 +167,7 @@
         <scene sceneID="EcP-Dp-XSL">
             <objects>
                 <navigationController storyboardIdentifier="TimelineNavigationViewController" id="Xo6-wF-Iuv" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="e3O-kN-YYU">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="e3O-kN-YYU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.0" green="0.51764705879999995" blue="0.70588235290000001" alpha="1" colorSpace="calibratedRGB"/>

@@ -53,6 +53,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         print ("CONSTRAINT = \(self.origBannerImageHeightConstraintValue)")
         self.tableView.tableHeaderView = tableHeaderView
         
+        //setup cell nib
+        self.tableView.register(UINib(nibName: "TweetTableViewCell", bundle: nil), forCellReuseIdentifier: "TweetTableViewCell")
+        
         // Add UI refreshing on pull down
         self.refreshControl = UIRefreshControl()
         self.refreshControl!.addTarget(self, action: #selector(refreshControlAction(_:)), for: UIControlEvents.valueChanged)
@@ -148,15 +151,14 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileTweetCell", for: indexPath) //as! TweetTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TweetTableViewCell", for: indexPath) as! TweetTableViewCell
         let tweet = self.tweets[indexPath.row] as Tweet
-        /*cell.prepareCellFor(tweet: tweet, indexPath: indexPath)
+        cell.prepareCellFor(tweet: tweet, indexPath: indexPath)
         cell.viewController = self
         cell.updateTweet = { (updatedTweet: Tweet) in
             self.tweets[indexPath.row] = updatedTweet
             tableView.reloadRows(at: [indexPath], with: .automatic)
-        }*/
-        cell.textLabel?.text = "\(tweet.text)"
+        }
         return cell
     }
     

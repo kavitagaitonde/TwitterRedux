@@ -93,9 +93,14 @@ class TwitterClient: BDBOAuth1SessionManager {
         getTimeLine(forUser: forUser, forType: forType, parameters: nil, success: success, failure: failure)
     }
     
-    func getTimeLine (forUser: User?, forType: TimelineType,  parameters: NSDictionary?, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+    func getTimeLine (forUser: User?, forType: TimelineType,  parameters: [String: Any]?, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
         
         var url : String?
+        var params : [String: Any] = [:]
+        
+        if parameters != nil {
+            params = parameters!
+        }
         switch forType {
         case .home:
             url = "1.1/statuses/home_timeline.json"
@@ -103,16 +108,14 @@ class TwitterClient: BDBOAuth1SessionManager {
         case .user:
             url = "1.1/statuses/user_timeline.json"
             if let user = forUser {
-                if parameters != nil {
-                    parameters?.setValue(user.id, forKey: "user_id")
-                }
+                params["user_id"] = user.id
             }
             break
         case .mentions:
             url = "1.1/statuses/mentions_timeline.json"
             break
         }
-        get(url!, parameters: parameters, progress: nil
+        get(url!, parameters: params, progress: nil
             , success: { (task: URLSessionDataTask?, response: Any?) in
                 print("Success fetching \(self.getTimelineType(forType)) timeline - ")
                 let dictionaries = response as! [NSDictionary]
