@@ -569,11 +569,12 @@
                             <constraint firstItem="cEF-rf-Per" firstAttribute="leading" secondItem="5DG-Fo-BnE" secondAttribute="leading" id="y1F-nO-9kw"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="XaL-Es-GUq"/>
+                    <navigationItem key="navigationItem" id="6NH-cy-xeL"/>
                     <connections>
                         <outlet property="tableView" destination="cEF-rf-Per" id="RFA-cA-PWj"/>
-                        <segue destination="kgK-sI-RqR" kind="push" id="pbH-ge-66n"/>
+                        <segue destination="kgK-sI-RqR" kind="push" identifier="profileTweetDetailSegue" id="pbH-ge-66n"/>
                         <segue destination="p44-dq-jtU" kind="presentation" identifier="replySegue" id="6e3-UL-xhm"/>
+                        <segue destination="p44-dq-jtU" kind="presentation" identifier="profileComposeTweet" id="OEW-Vl-LBN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ri8-mk-BDj" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -635,9 +636,11 @@
             <objects>
                 <navigationController storyboardIdentifier="ProfileNavigationViewController" automaticallyAdjustsScrollViewInsets="NO" id="KD1-mc-B2f" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Wl1-Np-muG">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Wl1-Np-muG">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" red="0.0" green="0.51764705879999995" blue="0.70588235290000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="barTintColor" red="0.0" green="0.51764705879999995" blue="0.70588235290000001" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -678,7 +681,7 @@
         <image name="whitebird" width="64" height="64"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="pbH-ge-66n"/>
-        <segue reference="6e3-UL-xhm"/>
+        <segue reference="WiK-TK-pCf"/>
+        <segue reference="FBo-0K-hZi"/>
     </inferredMetricsTieBreakers>
 </document>
