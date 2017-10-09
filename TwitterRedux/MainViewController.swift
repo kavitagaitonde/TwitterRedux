@@ -55,8 +55,26 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
 
         MBProgressHUD.showAdded(to: self.view, animated: true)
         self.loadData(true)
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "ReloadView"), object: nil, queue: OperationQueue.main, using: {(Notification) -> () in
+            print ("****** RELOADING DATA *************")
+            self.user = User.currentUser
+            self.loadData(true)
+        })
+        
+
     }
     
+    /*override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print ("****** VIEW WILL APPEAR *************")
+        user = User.currentUser
+        self.loadData(true)
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
+
+    }*/
+        
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

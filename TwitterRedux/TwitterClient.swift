@@ -50,6 +50,25 @@ class TwitterClient: BDBOAuth1SessionManager {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UserLoggedOut"), object: nil)
     }
     
+    func switchAccount(_ toUser: User) {
+        deauthorize()
+        User.currentUser = toUser
+        self.requestSerializer.saveAccessToken(User.accessToken)
+        print("**** Switched user to = \(User.currentUser?.name)")
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadView"), object: nil)
+    }
+    
+    func removeAccount(_ forUser: User) {
+        User.removeUserAccount(forUser.id)
+        User.removeAccessToken(forUser)
+        print("**** Removed user  = \(forUser.name)")
+        if forUser.id == User.currentUser?.id {
+            deauthorize()
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ReloadView"), object: nil)
+        }
+        
+    }
+    
     func handleOpenUrl(url: URL) {
         print(url.description)
         let requestToken = BDBOAuth1Credential(queryString: url.query)
@@ -58,6 +77,7 @@ class TwitterClient: BDBOAuth1SessionManager {
             
             self.userCredentials(success: {(user: User) in
                 User.currentUser = user
+                User.accessToken = accessToken
                 self.loginSuccess?()
             }, failure: {(error: Error?) in
                  self.loginFailure?(error!)   

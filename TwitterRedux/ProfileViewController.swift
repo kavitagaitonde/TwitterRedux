@@ -28,30 +28,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.tableView.dataSource = self
         self.tableView.estimatedRowHeight = 125
         self.tableView.rowHeight = UITableViewAutomaticDimension
-        
-        let tableHeaderView = ProfileHeaderView(/*frame: CGRect(x: self.tableView.frame.origin.x, y: self.tableView.frame.origin.y, width: self.tableView.frame.size.width, height: 300)*/)
-        tableHeaderView.nameLabel.text = user?.name
-        tableHeaderView.screennameLabel.text = "@\((user?.screenName)!)"
-        tableHeaderView.descriptionLabel.text = "\((user?.desc)!)"
-        //tableHeaderView.createdDateLabel.text = "Joined on \((user?.createdAt)!)"
-        tableHeaderView.followersCountLabel.text = "\((user?.followersCount)!)"
-        tableHeaderView.followingCountLabel.text = "\((user?.followingCount)!)"
-        tableHeaderView.likesCountLabel.text = "\((user?.favoritesCount)!)"
-        tableHeaderView.tweetsCountLabel.text = "\((user?.tweetsCount)!)"
-        if (user?.profileUrl != nil) {
-            tableHeaderView.profileImageView.setImageWith((user?.profileUrl!)!)
-        } else {
-            tableHeaderView.profileImageView.image = nil
-        }
-        if (user?.bannerUrl != nil) {
-            tableHeaderView.bannerImageView.setImageWith((user?.bannerUrl!)!)
-        } else {
-            tableHeaderView.bannerImageView.image = nil
-        }
-        self.origBannerImageHeightConstraintValue = tableHeaderView.bannerImageHeightConstraint.constant
-        
-        print ("CONSTRAINT = \(self.origBannerImageHeightConstraintValue)")
-        self.tableView.tableHeaderView = tableHeaderView
+        self.setupHeaderView()
         
         //setup cell nib
         self.tableView.register(UINib(nibName: "TweetTableViewCell", bundle: nil), forCellReuseIdentifier: "TweetTableViewCell")
@@ -73,8 +50,23 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         MBProgressHUD.showAdded(to: self.view, animated: true)
         self.loadData(true)
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "ReloadView"), object: nil, queue: OperationQueue.main, using: {(Notification) -> () in
+            print ("****** RELOADING DATA *************")
+            self.user = User.currentUser
+            self.setupHeaderView()
+            self.loadData(true)
+        })
 
     }
+    
+    /*override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print ("****** VIEW WILL APPEAR *************")
+        user = User.currentUser
+        self.setupHeaderView()
+        self.loadData(true)
+    }*/
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -99,6 +91,35 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             tableView.layoutIfNeeded()
         }
     }
+    
+    
+    func setupHeaderView() {
+        let tableHeaderView = ProfileHeaderView(/*frame: CGRect(x: self.tableView.frame.origin.x, y: self.tableView.frame.origin.y, width: self.tableView.frame.size.width, height: 300)*/)
+        tableHeaderView.nameLabel.text = user?.name
+        tableHeaderView.screennameLabel.text = "@\((user?.screenName)!)"
+        tableHeaderView.descriptionLabel.text = "\((user?.desc)!)"
+        //tableHeaderView.createdDateLabel.text = "Joined on \((user?.createdAt)!)"
+        tableHeaderView.followersCountLabel.text = "\((user?.followersCount)!)"
+        tableHeaderView.followingCountLabel.text = "\((user?.followingCount)!)"
+        tableHeaderView.likesCountLabel.text = "\((user?.favoritesCount)!)"
+        tableHeaderView.tweetsCountLabel.text = "\((user?.tweetsCount)!)"
+        if (user?.profileUrl != nil) {
+            tableHeaderView.profileImageView.setImageWith((user?.profileUrl!)!)
+        } else {
+            tableHeaderView.profileImageView.image = nil
+        }
+        if (user?.bannerUrl != nil) {
+            tableHeaderView.bannerImageView.setImageWith((user?.bannerUrl!)!)
+        } else {
+            tableHeaderView.bannerImageView.image = nil
+        }
+        self.origBannerImageHeightConstraintValue = tableHeaderView.bannerImageHeightConstraint.constant
+        
+        print ("CONSTRAINT = \(self.origBannerImageHeightConstraintValue)")
+        self.tableView.tableHeaderView = tableHeaderView
+        
+    }
+    
     
     func refreshControlAction(_ refreshControl: UIRefreshControl) {
         self.loadData(true)

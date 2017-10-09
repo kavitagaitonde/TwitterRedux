@@ -28,8 +28,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //setup notification observers
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UserLoggedOut"), object: nil, queue: OperationQueue.main, using: {(Notification) -> () in
-            let vc = storyboard.instantiateInitialViewController()
-            self.window?.rootViewController = vc
+            
+            let totalAccounts = User.getUserAccounts()!
+            if totalAccounts.count > 0 {
+                
+            } else {
+                let vc = storyboard.instantiateInitialViewController()
+                self.window?.rootViewController = vc
+            }
         })
 
         return true

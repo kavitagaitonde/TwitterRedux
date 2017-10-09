@@ -13,7 +13,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var tableView: UITableView!
     
     var viewControllers: [UIViewController] = [UIViewController]()
-    var menuOptions: [String] = ["Profile", "Timeline", "Mentions"]
+    var menuOptions: [String] = ["Profile", "Timeline", "Mentions", "Accounts"]
     var hamburgerViewController: HamburgerViewController! 
     var rowHeight: Int = 0
     
@@ -39,9 +39,12 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         let mentionsVC = mentionsNC.viewControllers.first as! MainViewController
         mentionsVC.timelineType = .mentions
         
+        let accountsNC = storyboard.instantiateViewController(withIdentifier: "AccountsNavigationViewController") as! UINavigationController
+        
         viewControllers.append(profileNC)
         viewControllers.append(timelineNC)
         viewControllers.append(mentionsNC)
+        viewControllers.append(accountsNC)
         
         rowHeight = Int(self.tableView.frame.size.height) / menuOptions.count
         self.hamburgerViewController.contentViewController = timelineNC
