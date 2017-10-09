@@ -64,17 +64,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         
 
     }
-    
-    /*override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        print ("****** VIEW WILL APPEAR *************")
-        user = User.currentUser
-        self.loadData(true)
-        self.view.setNeedsLayout()
-        self.view.layoutIfNeeded()
-
-    }*/
-        
+            
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

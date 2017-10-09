@@ -60,14 +60,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
 
     }
     
-    /*override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        print ("****** VIEW WILL APPEAR *************")
-        user = User.currentUser
-        self.setupHeaderView()
-        self.loadData(true)
-    }*/
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.shouldUpdateConstraints = true
@@ -94,7 +86,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     
     func setupHeaderView() {
-        let tableHeaderView = ProfileHeaderView(/*frame: CGRect(x: self.tableView.frame.origin.x, y: self.tableView.frame.origin.y, width: self.tableView.frame.size.width, height: 300)*/)
+        let tableHeaderView = ProfileHeaderView()
         tableHeaderView.nameLabel.text = user?.name
         tableHeaderView.screennameLabel.text = "@\((user?.screenName)!)"
         tableHeaderView.descriptionLabel.text = "\((user?.desc)!)"

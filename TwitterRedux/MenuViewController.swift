@@ -32,7 +32,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         
         let timelineNC = storyboard.instantiateViewController(withIdentifier: "TimelineNavigationViewController") as! UINavigationController
-        let timelineVC = /*timelineNC.topViewController as! MainViewController*/ timelineNC.viewControllers.first as! MainViewController
+        let timelineVC = timelineNC.viewControllers.first as! MainViewController
         timelineVC.timelineType = .home
         
         let mentionsNC = storyboard.instantiateViewController(withIdentifier: "TimelineNavigationViewController") as! UINavigationController

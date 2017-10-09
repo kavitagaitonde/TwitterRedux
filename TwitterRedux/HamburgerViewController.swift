@@ -104,41 +104,8 @@ class HamburgerViewController: UIViewController {
             let composeController = segue.destination as! ComposeViewController
             composeController.composeMode = .tweet
             composeController.addTweet = { (tweet: Tweet) in
-                /*self.tweets.insert(tweet, at: 0)
-                self.tweetRecentId = self.tweets[0].id
-                self.tableView.reloadData()*/
             }
-        } /*else if(segue.identifier == "composeReplySegue") {
-            let composeController = segue.destination as! ComposeViewController
-            composeController.composeMode = .reply
-            let button = sender as! UIButton
-            composeController.replyToTweet = self.tweets[button.tag]
-            composeController.addTweet = { (tweet: Tweet) in
-                self.tweets.insert(tweet, at: 0)
-                self.tweetRecentId = self.tweets[0].id
-                self.tableView.reloadData()
-            }
-        } else if (segue.identifier == "tweetDetailSegue") {
-            let cell = sender as! TweetTableViewCell
-            if let indexPath = self.tableView.indexPath(for: cell) {
-                let detailsController = segue.destination as! DetailViewController
-                let tweet = self.tweets[indexPath.row] as Tweet
-                detailsController.tweet = tweet
-                detailsController.updateTweet = { (updatedTweet: Tweet) in
-                    self.tweets[indexPath.row] = updatedTweet
-                    self.tableView.reloadRows(at: [indexPath], with: .automatic)
-                }
-                self.tableView.deselectRow(at: indexPath, animated: true)
-            }
-        } else if (segue.identifier == "meSegue") {
-            //try to get the latest user object
-            TwitterClient.sharedInstance?.userCredentials(success: {(user: User) in
-                User.currentUser = user
-                }, failure: {(error: Error?) in
-                    //do nothing, use the existing instance
-            })
-        }*/
-        
+        } 
     }
 
 }

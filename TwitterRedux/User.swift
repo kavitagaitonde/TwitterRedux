@@ -172,10 +172,7 @@ class User: NSObject {
             var usersDictionary: /*[Any] = [Any]() */ [String:Any] = [String:Any]()
             if let usersData = usersData {//update
                 usersDictionary = try! JSONSerialization.jsonObject(with: usersData, options: []) as! [String:Any]
-            } else {//create
-                //usersDictionary = ["\(user.id)":user.name]
-                //usersDictionary = [user.userDictionary!]
-            }
+            } 
             usersDictionary["\(user.id)"] = user.userDictionary!
             //usersDictionary.append(user.userDictionary!)
             let data = try! JSONSerialization.data(withJSONObject: usersDictionary, options: [])

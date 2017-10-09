@@ -107,27 +107,6 @@ class ComposeViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    /*func textViewDidChange(_: UITextView) {
-        let count = self.tweetTextView.text.characters.count
-        if (count >= 140) {
-            self.te
-        } else {
-            self.characterCountLabel.text = "\(140 - count)"
-        }
-        
-    }*/
-
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
     @IBAction func onClose(_ sender: AnyObject) {
         self.dismiss(animated: true, completion: nil)
     }
